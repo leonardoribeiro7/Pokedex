@@ -7,6 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="silver">#738A93</color>
+    <color name="paper_color">#F8F8F8</color>
+    <color name="green">#49bb79</color>
+    <color name="dark_green">#1a231e</color>
 
     <color name="LightBlue">#FFBAC7FF</color>
     <color name="lightGrey">#FFAAAAAA</color>
@@ -36,5 +40,6 @@
     <color name="TypeDark">#FF705746</color>
     <color name="TypeSteel">#FFB7B7CE</color>
     <color name="TypeFairy">#FFD685AD</color>
+    <color name="light_gray">#B5B5B5</color>
 
 </resources>
