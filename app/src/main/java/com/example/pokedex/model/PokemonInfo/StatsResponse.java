@@ -15,9 +15,9 @@ public class StatsResponse {
     }
 
     @SerializedName("stat")
-    public StatsResponse.Stat stat;
+    public Stat stat;
 
-    public StatsResponse.Stat getStat() {
+    public Stat getStat() {
         return stat;
     }
 

@@ -5,7 +5,11 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.pokedex.App;
 import com.example.pokedex.model.PokemonInfo.PokemonInfoResponse;
+import com.example.pokedex.network.ApplicationComponent;
+
+import dagger.Provides;
 
 @Dao
 public interface PokemonInfoDAO {

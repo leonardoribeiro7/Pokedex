@@ -1,5 +1,6 @@
 package com.example.pokedex.model.PokemonList;
 
+import com.example.pokedex.model.PokemonInfo.PokemonInfoResponse;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

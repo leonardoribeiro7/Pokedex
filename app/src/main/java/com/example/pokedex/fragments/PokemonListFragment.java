@@ -1,7 +1,5 @@
 package com.example.pokedex.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -10,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,23 +19,18 @@ import android.widget.Toast;
 
 import com.example.pokedex.R;
 import com.example.pokedex.fragments.PokemonListFragmentDirections.NavigateToPokemonDetailsFragment;
-import com.example.pokedex.repository.PokemonRepository;
+import com.example.pokedex.repository.ListRepository;
 import com.example.pokedex.adapter.PokemonListAdapter;
 import com.example.pokedex.databinding.FragmentPokemonListBinding;
 import com.example.pokedex.viewModel.ListViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
-import dagger.hilt.EntryPoint;
-import dagger.hilt.android.AndroidEntryPoint;
-
-public class PokemonListFragment extends Fragment implements PokemonListAdapter.OnItemClickListener{
+public class PokemonListFragment extends Fragment implements PokemonListAdapter.OnItemClickListener {
 
     private FragmentPokemonListBinding fragmentPokemonListBinding;
     private PokemonListAdapter adapter;
-    private PokemonRepository repository;
+    private ListRepository repository;
     private ListViewModel viewModel;
     private int offset;
     private boolean checking0, checking1, checking2;
@@ -48,13 +40,15 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     public static final String EXTRA_NAME_PARAM = "Name Pokemon";
     public static final String EXTRA_IMAGE_PARAM = "Image Pokemon";
 
+
     //View Declarations
     private ImageView arrowBack;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        repository = new PokemonRepository();
+        repository = new ListRepository();
+
     }
 
     @Override
@@ -80,7 +74,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
         updateProgressBarForUI();
         updateSwipeRefreshLayoutForUI();
         updateToastForUI();
-        handleOnBackPressed();
+
 
         if (savedInstanceState == null) {
             checking0 = true;
@@ -92,6 +86,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
             offset = savedInstanceState.getInt(STATE_OFFSET);
         }
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -132,7 +127,6 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
             layoutManager.smoothScrollToPosition(fragmentPokemonListBinding.pokemonListRv, null, 0);
         }
     }
-
 
 
     private void pullToRefresh() {
@@ -203,23 +197,10 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
         Navigation.findNavController(requireView()).navigate(action);
     }
 
-    private void navigateBack(){
-        requireActivity().onBackPressed();
-    }
-
-    private void handleOnBackPressed() {
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                repository.resetValuesLiveData();
-                requireActivity().finish();
-            }
-        });
-    }
 
     @Override
     public void onClick(String namePoke, String imagePoke) {
-        navigateToDetail(namePoke,imagePoke);
+        navigateToDetail(namePoke, imagePoke);
     }
 
     @Override

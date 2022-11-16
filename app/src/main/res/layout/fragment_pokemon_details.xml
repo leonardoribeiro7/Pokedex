@@ -23,6 +23,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
+            app:cardBackgroundColor="@color/black"
             android:layout_height="260dp"
             android:layout_marginTop="0dp"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CardView">
@@ -59,6 +60,19 @@
             android:textSize="25sp"
             android:textStyle="bold"
             android:maxLines="1" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/typeList"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/namePoke"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:scrollbars="none"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/type_item"/>
 
     </RelativeLayout>
 

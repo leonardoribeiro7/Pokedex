@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green"
+    android:background="@color/paper_color"
     tools:context=".fragments.PokemonListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:orientation="vertical"
+        app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -25,8 +25,9 @@
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/pokemon"
                 tools:ignore="ContentDescription" />
@@ -78,8 +79,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:backgroundTint="@color/black"
-        app:tint="@color/white"
+        android:backgroundTint="@color/paper_color"
+        app:tint="@color/black"
         android:clickable="true"
         android:contentDescription="@string/scroll_up_indicator"
         android:focusable="true"

@@ -1,14 +1,11 @@
 package com.example.pokedex.repository;
 
-import android.content.Context;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.pokedex.App;
 import com.example.pokedex.api.APIClient;
-import com.example.pokedex.api.ApiService;
 import com.example.pokedex.database.PokemonListDAO;
 import com.example.pokedex.model.PokemonList.PokemonCallback;
 import com.example.pokedex.model.PokemonList.PokemonResponse;
@@ -28,7 +25,7 @@ import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @ActivityScoped
-public class PokemonRepository {
+public class ListRepository {
 
     //Injections
     @Inject
@@ -44,7 +41,7 @@ public class PokemonRepository {
     private final static MutableLiveData<Boolean> swipeRefreshLayoutLiveData = new MutableLiveData<>();
     private final static MutableLiveData<String> toastLiveData = new MutableLiveData<>();
 
-    public PokemonRepository() {
+    public ListRepository() {
         getInjection();
     }
 
@@ -121,6 +118,7 @@ public class PokemonRepository {
     private void onInsertPokemonListIntoDatabase(List<PokemonResponse> pokemonList) {
         Observable<List<PokemonResponse>> observable = Observable.just(pokemonList);
 
+        //Insert the pokemonList in to the Database
         Disposable disposableInsertData = observable
                 .doOnNext(resultsResponses -> pokemonListDAO.insertPokemonList(resultsResponses))
                 .subscribeOn(Schedulers.io())
@@ -128,6 +126,7 @@ public class PokemonRepository {
 
         compositeDisposable.add(disposableInsertData);
     }
+
 
     private void getInjection() {
         App.getAppComponent().injectMainRepository(this);

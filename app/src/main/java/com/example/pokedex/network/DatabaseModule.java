@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.room.Room;
 
 import com.example.pokedex.database.AppDatabase;
+import com.example.pokedex.database.PokemonInfoDAO;
 import com.example.pokedex.database.PokemonListDAO;
 
 import javax.inject.Singleton;
@@ -43,6 +44,12 @@ public class DatabaseModule {
     @Singleton
     PokemonListDAO providePokemonListDAO(AppDatabase appDatabase) {
         return appDatabase.pokemonListDAO();
+    }
+
+    @Provides
+    @Singleton
+    PokemonInfoDAO providePokemonInfoDAO(AppDatabase appDatabase) {
+        return appDatabase.pokemonInfoDAO();
     }
 
 }

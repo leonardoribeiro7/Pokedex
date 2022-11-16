@@ -14,12 +14,8 @@ import java.util.List;
 @Entity(tableName = "PokemonInfo")
 public class PokemonInfoResponse {
 
-    public PokemonInfoResponse() {
-    }
 
     @PrimaryKey
-    public int id;
-
     @SerializedName("name")
     @NonNull
     public String name;
@@ -46,6 +42,13 @@ public class PokemonInfoResponse {
 
     public List<StatsResponse> getStats() {
         return stats;
+    }
+
+    public PokemonInfoResponse(@NonNull String name,
+                               List<TypesResponse> types) {
+        this.name = name;
+        this.types = types;
+
     }
 
 }
