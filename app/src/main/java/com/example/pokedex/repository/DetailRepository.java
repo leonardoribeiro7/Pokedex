@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.pokedex.App;
 import com.example.pokedex.api.APIClient;
 import com.example.pokedex.database.PokemonInfoDAO;
+import com.example.pokedex.model.PokemonInfo.AbilityResponse;
 import com.example.pokedex.model.PokemonInfo.PokemonInfoResponse;
 import com.example.pokedex.model.PokemonInfo.TypesResponse;
+import com.example.pokedex.util.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class DetailRepository {
 
     //Declarations
     private final List<TypesResponse> typesResponses = new ArrayList<>();
+    private final List<AbilityResponse> abilityResponses = new ArrayList<>();
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final static MutableLiveData<PokemonInfoResponse> pokemonInfoLiveData = new MutableLiveData<>();
     private final static MutableLiveData<Boolean> progressBarLiveData = new MutableLiveData<>();
@@ -78,19 +81,29 @@ public class DetailRepository {
 
     private void onResponseSuccess(PokemonInfoResponse pokemonInfoResponse, String namePoke) {
 
+        abilityResponses.clear();
         typesResponses.clear();
+
         //Get name of types Pokemon and Color Types
         List<TypesResponse> typesList = pokemonInfoResponse.getTypes();
 
-        for (int i = 0; i < typesList.size(); i++) {
+        List<AbilityResponse> abilityList = pokemonInfoResponse.getAbility();
+
+        for (int i = 0, a = 0; i < typesList.size() && a < abilityList.size(); i++, a++) {
             TypesResponse type = typesList.get(i);
 
+            AbilityResponse ability = abilityList.get(i);
+
+            String abilityName = ability.getAbility().getName();
+
             String nameType = type.getType().getName();
+
+            abilityResponses.add(new AbilityResponse(abilityName));
 
             typesResponses.add(new TypesResponse(nameType));
         }
 
-        PokemonInfoResponse pokemonInfo = new PokemonInfoResponse(namePoke, typesResponses);
+        PokemonInfoResponse pokemonInfo = new PokemonInfoResponse(namePoke, typesResponses, abilityResponses);
 
         progressBarLiveData.setValue(false);
         pokemonInfoLiveData.setValue(pokemonInfo);

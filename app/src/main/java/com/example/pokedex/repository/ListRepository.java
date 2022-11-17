@@ -9,6 +9,7 @@ import com.example.pokedex.api.APIClient;
 import com.example.pokedex.database.PokemonListDAO;
 import com.example.pokedex.model.PokemonList.PokemonCallback;
 import com.example.pokedex.model.PokemonList.PokemonResponse;
+import com.example.pokedex.util.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class ListRepository {
     private final static MutableLiveData<Boolean> progressBarLiveData = new MutableLiveData<>();
     private final static MutableLiveData<Boolean> swipeRefreshLayoutLiveData = new MutableLiveData<>();
     private final static MutableLiveData<String> toastLiveData = new MutableLiveData<>();
+    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     public ListRepository() {
         getInjection();

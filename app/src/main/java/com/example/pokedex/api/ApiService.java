@@ -1,7 +1,10 @@
 package com.example.pokedex.api;
 
+
+import com.example.pokedex.R;
 import com.example.pokedex.model.PokemonInfo.PokemonInfoResponse;
 import com.example.pokedex.model.PokemonList.PokemonCallback;
+import com.example.pokedex.util.Constants;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
@@ -14,7 +17,7 @@ public interface ApiService {
 
     /*Request to get the list of the first 20 pokemon thats why the limit=20 we get the offset which
     indicates the position of the pokemon in the array*/
-    @GET("pokemon?limit=20")
+    @GET("pokemon?limit=" + Constants.POKEMON_LIST_LIMIT)
     Observable<PokemonCallback> getPokemonList(
             @Query("offset") int offset);
 

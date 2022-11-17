@@ -74,6 +74,33 @@
             android:nestedScrollingEnabled="false"
             tools:listitem="@layout/type_item"/>
 
+        <TextView
+            android:id="@+id/ability_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/typeList"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/abilities"
+            android:textAppearance="@style/Platform.MaterialComponents.Light"
+            android:textColor="@color/silver"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/abilityList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ability_txt"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:scrollbars="none"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/ability_item"/>
+
+
     </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

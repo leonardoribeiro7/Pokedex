@@ -22,6 +22,7 @@ import com.example.pokedex.fragments.PokemonListFragmentDirections.NavigateToPok
 import com.example.pokedex.repository.ListRepository;
 import com.example.pokedex.adapter.PokemonListAdapter;
 import com.example.pokedex.databinding.FragmentPokemonListBinding;
+import com.example.pokedex.util.LoadingDialog;
 import com.example.pokedex.viewModel.ListViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     private int offset;
     private boolean checking0, checking1, checking2;
     private boolean loading = true;
-    private boolean isScrolledToEnd;
+    private final LoadingDialog loadingDialog = new LoadingDialog();
     private final String STATE_OFFSET = "Current Offset";
     public static final String EXTRA_NAME_PARAM = "Name Pokemon";
     public static final String EXTRA_IMAGE_PARAM = "Image Pokemon";
@@ -44,11 +45,11 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     //View Declarations
     private ImageView arrowBack;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         repository = new ListRepository();
-
     }
 
     @Override
@@ -112,6 +113,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0) { // dy > 0 = check for scroll down
                     if (loading && !recyclerView.canScrollVertically(1)) {
+                        loadingDialog.displayLoading(requireContext(), false);
                         loading = false;
                         offset += 20;
                         fetchPokemonList(offset);
@@ -166,6 +168,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
                 if (checking1 && aBoolean) {
                     loading = true;
                     fragmentPokemonListBinding.swipeRefreshLayout.setRefreshing(false);
+                    loadingDialog.hideLoading();
                 } else {
                     checking1 = true;
                 }
@@ -183,6 +186,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
                         offset -= 20;
                         loading = true;
                         fragmentPokemonListBinding.swipeRefreshLayout.setRefreshing(false);
+                        loadingDialog.hideLoading();
                         Toast.makeText(requireActivity(), string, Toast.LENGTH_SHORT).show();
                     }
                 } else {

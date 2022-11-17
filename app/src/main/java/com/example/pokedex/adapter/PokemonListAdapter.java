@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pokedex.R;
 import com.example.pokedex.databinding.ListItemPokemonBinding;
 import com.example.pokedex.model.PokemonList.PokemonResponse;
+import com.example.pokedex.util.LoadingDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -38,7 +39,7 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
     private final List<PokemonResponse> pokemonList = new ArrayList<>();
     private final Context context;
     private final OnItemClickListener onItemClickListener;
-
+    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     public PokemonListAdapter(Context context, OnItemClickListener onItemClickListener, @NonNull DiffUtil.ItemCallback<PokemonResponse> diffItemCallback) {
         super(diffItemCallback);
@@ -67,6 +68,7 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
+
         PokemonResponse item = pokemonList.get(position);
 
         //Get pokemon Name through Retrofit
@@ -105,9 +107,9 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-
             }
         };
+
 
         listImageView.setTag(target);
 
@@ -126,7 +128,6 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
         {
             onItemClickListener.onClick(pokeName, imagePoke);
         });
-
     }
 
 

@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Pokedex</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Hint Text for SearchBar -->
     <string name="search_pokemons">Search Pokémons</string>
@@ -14,5 +12,7 @@
 
     <!--When PokemonDetailsFragment is open without any network connection -->
     <string name="ToastForOfflineMode">You are viewing in Offline Mode</string>
+    <string name="abilities">☆ABILITIES☆</string>
+    <string name="ability_item_test">Compound Eyes</string>
 
 </resources>

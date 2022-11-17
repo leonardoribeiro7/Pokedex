@@ -4,10 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class AbilityResponse {
 
-    @SerializedName("ability")
-    public AbilityResponse.Ability ability;
+    public String nameAbility;
 
-    public AbilityResponse.Ability getAbility() {
+    public AbilityResponse(String nameAbility) {
+        this.nameAbility = nameAbility;
+    }
+
+    public String getNameAbility() {
+        return nameAbility;
+    }
+
+    @SerializedName("ability")
+    public Ability ability;
+
+    public Ability getAbility() {
         return ability;
     }
 

@@ -1,27 +1,19 @@
 package com.example.pokedex.fragments;
 
-import static com.example.pokedex.util.Constants.DEFAULT_IMAGE_URL;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.palette.graphics.Palette;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,38 +21,33 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
 import com.example.pokedex.R;
+import com.example.pokedex.adapter.Details.AbilitiesAdapter;
 import com.example.pokedex.adapter.Details.TypeAdapter;
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding;
-import com.example.pokedex.fragments.PokemonListFragmentDirections.NavigateToPokemonDetailsFragment;
 import com.example.pokedex.repository.DetailRepository;
+import com.example.pokedex.util.LoadingDialog;
 import com.example.pokedex.viewModel.DetailViewModel;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import coil.Coil;
-import coil.ImageLoader;
-import coil.request.ImageRequest;
-import coil.target.ImageViewTarget;
-import coil.util.CoilUtils;
-import okhttp3.OkHttpClient;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class PokemonDetailsFragment extends Fragment {
 
     private TypeAdapter typeAdapter;
+    private AbilitiesAdapter abilitiesAdapter;
     private FragmentPokemonDetailsBinding binding;
     private DetailRepository detailRepository;
     private DetailViewModel detailViewModel;
     private String namePoke;
     private String imagePoke;
+    private final LoadingDialog loadingDialog = new LoadingDialog();
     private boolean checking0, checking1;
     private final String STATE_NAME = "Current Name";
     private final String STATE_IMAGE = "Current Image";
@@ -98,9 +85,16 @@ public class PokemonDetailsFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
+
+        //Types Adapter
         binding.typeList.setHasFixedSize(true);
         typeAdapter = new TypeAdapter(requireActivity(), new TypeAdapter.TypeDiff());
         binding.typeList.setAdapter(typeAdapter);
+
+        //Abilities Adapter
+        binding.abilityList.setHasFixedSize(true);
+        abilitiesAdapter = new AbilitiesAdapter(requireActivity(), new AbilitiesAdapter.AbilityDiff());
+        binding.abilityList.setAdapter(abilitiesAdapter);
     }
 
     @Override
@@ -116,7 +110,6 @@ public class PokemonDetailsFragment extends Fragment {
             checking1 = true;
             fetchPokemonInfo(namePoke);
         }
-
 
     }
 
@@ -138,6 +131,7 @@ public class PokemonDetailsFragment extends Fragment {
             //Background work here
             handler.post(() -> {
                 //UI Thread work here
+                loadingDialog.displayLoading(requireContext(),false);
                 binding.namePoke.setText(namePoke);
                 Glide.with(this).load(imagePoke).placeholder(R.drawable.ic_loading).into(binding.imagePoke);
 
@@ -156,6 +150,7 @@ public class PokemonDetailsFragment extends Fragment {
                                 binding.cardView.setCardBackgroundColor(textSwatch.getRgb());
                             }
                             binding.imagePoke.setImageBitmap(bitmap);
+                            loadingDialog.hideLoading();
                         });
                     }
 
@@ -177,8 +172,11 @@ public class PokemonDetailsFragment extends Fragment {
                 picasso.load(imagePoke)
                         .placeholder(R.drawable.ic_loading)
                         .into(target);
+
             });
         });
+
+
 
 
     }
@@ -200,6 +198,7 @@ public class PokemonDetailsFragment extends Fragment {
         detailViewModel.getPokemonInfoLiveData().observe(getViewLifecycleOwner(), pokemonInfo -> {
             if (pokemonInfo != null && namePoke.equals(pokemonInfo.name)) {
                 typeAdapter.refreshTypeList(pokemonInfo.types);
+                abilitiesAdapter.refreshAbilityList(pokemonInfo.ability);
             }
         });
     }
@@ -227,7 +226,6 @@ public class PokemonDetailsFragment extends Fragment {
             }
         });
     }
-
 
 
     @Override

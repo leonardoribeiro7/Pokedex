@@ -14,5 +14,7 @@ public class Constants {
 
     public final static String ERROR_LOADING_LIST = "Error loading the list";
 
+    public final static String POKEMON_LIST_LIMIT = "20";
+
 
 }

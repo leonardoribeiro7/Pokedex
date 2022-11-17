@@ -9,18 +9,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="silver">#738A93</color>
     <color name="paper_color">#F8F8F8</color>
+    <color name="dark_paper">#E6E6E6</color>
     <color name="green">#49bb79</color>
     <color name="dark_green">#1a231e</color>
 
     <color name="LightBlue">#FFBAC7FF</color>
     <color name="lightGrey">#FFAAAAAA</color>
-
-    <color name="HPColor">#FFF5FF00</color>
-    <color name="AtkColor">#FF0000</color>
-    <color name="DefColor">#0027FF</color>
-    <color name="SpAtkColor">#673AB7</color>
-    <color name="SpDefColor">#EE00FF</color>
-    <color name="SpdColor">#02AA09</color>
 
     <color name="TypeNormal">#FFA8A77A</color>
     <color name="TypeFire">#FFEE8130</color>
