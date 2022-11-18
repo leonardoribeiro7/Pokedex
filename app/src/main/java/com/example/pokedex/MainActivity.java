@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //ViewBinding.getRoot, if the the Fragment that is being hosted is changed no need to come here and change
         ActivityMainBinding activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
 
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Better Design like FULLSCREEN APP
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

@@ -36,10 +36,10 @@ import java.util.concurrent.Executor;
 
 public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonListAdapter.RecyclerViewHolder> {
 
+    //Declarations
     private final List<PokemonResponse> pokemonList = new ArrayList<>();
     private final Context context;
     private final OnItemClickListener onItemClickListener;
-    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     public PokemonListAdapter(Context context, OnItemClickListener onItemClickListener, @NonNull DiffUtil.ItemCallback<PokemonResponse> diffItemCallback) {
         super(diffItemCallback);
@@ -55,24 +55,15 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
         return new RecyclerViewHolder(binding);
     }
 
-    public Bitmap StringToBitMap(String image) {
-        try {
-            byte[] encodeByte = Base64.decode(image, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
 
+        //Gets the array position
         PokemonResponse item = pokemonList.get(position);
 
-        //Get pokemon Name through Retrofit
+        //Gets the pokemon Name of the array position
         String pokeName = item.getName();
+
         //Get Image of Pokemon through Number of pokemon + .png
         String imagePoke = ARTWORK_IMAGE_URL + item.getNumber() + ".png";
 
@@ -80,10 +71,12 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
 
         final ImageView listImageView = holder.pokemonItemBinding.pokemonImgImg;
 
+        //new Target Function
         final Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 holder.pokemonItemBinding.pokemonImgImg.setImageBitmap(bitmap);
+                //Generates a palette of colors according the Image of the Pokemon
                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(@Nullable Palette palette) {
@@ -110,7 +103,7 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
             }
         };
 
-
+        //give the imageView a tag of Target to picasso recognizes the function above
         listImageView.setTag(target);
 
         //Image Loader and Palette Generator for CardView Background
@@ -161,12 +154,15 @@ public class PokemonListAdapter extends ListAdapter<PokemonResponse, PokemonList
 
     public static class PokemonDiff extends DiffUtil.ItemCallback<PokemonResponse> {
 
+        //Observable for recycler view items
 
+        //replaces the oldItem with the newItem
         @Override
         public boolean areItemsTheSame(@NonNull PokemonResponse oldItem, @NonNull PokemonResponse newItem) {
             return oldItem.getName().equals(newItem.getName());
         }
 
+        //if the old version of the item equals the new doesnt do anything
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull PokemonResponse oldItem, @NonNull PokemonResponse newItem) {

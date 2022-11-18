@@ -1,8 +1,10 @@
 package com.example.pokedex.fragments;
 
+import static com.example.pokedex.util.Constants.OFFLINE_MODE;
+import static com.example.pokedex.util.Constants.STATE_OFFSET;
+
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.pokedex.R;
 import com.example.pokedex.fragments.PokemonListFragmentDirections.NavigateToPokemonDetailsFragment;
 import com.example.pokedex.repository.ListRepository;
 import com.example.pokedex.adapter.PokemonListAdapter;
@@ -37,9 +38,6 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     private boolean checking0, checking1, checking2;
     private boolean loading = true;
     private final LoadingDialog loadingDialog = new LoadingDialog();
-    private final String STATE_OFFSET = "Current Offset";
-    public static final String EXTRA_NAME_PARAM = "Name Pokemon";
-    public static final String EXTRA_IMAGE_PARAM = "Image Pokemon";
 
 
     //View Declarations
@@ -53,13 +51,11 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentPokemonListBinding = FragmentPokemonListBinding.inflate(getLayoutInflater());
         setUpRecyclerView();
-        arrowBack.setOnClickListener(v -> {
-            scrollUp(fragmentPokemonListBinding.getRoot());
-        });
+        arrowBack.setOnClickListener(v -> scrollUp(fragmentPokemonListBinding.getRoot()));
 
         viewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
 
@@ -69,6 +65,8 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //calling the functions
         loadMoreOnRecyclerView();
         pullToRefresh();
         updateDataForUI();
@@ -96,26 +94,32 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     private void setUpRecyclerView() {
+        //setting the adapter and the arrowBack button
         arrowBack = fragmentPokemonListBinding.scrollUpFab;
         fragmentPokemonListBinding.pokemonListRv.setHasFixedSize(true);
         adapter = new PokemonListAdapter(requireActivity(), this, new PokemonListAdapter.PokemonDiff());
         fragmentPokemonListBinding.pokemonListRv.setAdapter(adapter);
     }
 
+    //Function to get the list of pokemon using repository IO thread functions
     private void fetchPokemonList(int offset) {
         repository.fetchPokemonList(offset);
     }
 
     private void loadMoreOnRecyclerView() {
+        //scroll listener if the user passes the 20 pokemon
         fragmentPokemonListBinding.pokemonListRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0) { // dy > 0 = check for scroll down
                     if (loading && !recyclerView.canScrollVertically(1)) {
+                        //starts the loading
                         loadingDialog.displayLoading(requireContext(), false);
                         loading = false;
+                        //adds more 20 pokemon
                         offset += 20;
+                        //does the request
                         fetchPokemonList(offset);
                     }
                 }
@@ -124,6 +128,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     public void scrollUp(View view) {
+        //scrollUP_fab function to get back to the top of the list
         LinearLayoutManager layoutManager = (LinearLayoutManager) fragmentPokemonListBinding.pokemonListRv.getLayoutManager();
         if (layoutManager != null) {
             layoutManager.smoothScrollToPosition(fragmentPokemonListBinding.pokemonListRv, null, 0);
@@ -132,15 +137,18 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
 
 
     private void pullToRefresh() {
+        //refresh the page function
         fragmentPokemonListBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            //clears the adapter
             adapter.clearAllOldData();
-            offset = 0; // the offset need to be reset to 0 bcz
-            fetchPokemonList(offset); // the loadMoreOnRecyclerView method stored the value of the offset from last time scrolled
+            offset = 0; // resets the offset
+            fetchPokemonList(offset); // makes the request again
         });
     }
 
 
     private void updateDataForUI() {
+        //if the list changes it refreshes
         viewModel.getPokemonListLiveData().observe(getViewLifecycleOwner(), pokemonList -> {
             if (pokemonList != null) {
                 adapter.refreshPokemonList(pokemonList);
@@ -149,6 +157,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     private void updateProgressBarForUI() {
+        //observable for the progressbar
         viewModel.getProgressBarLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (checking0 && aBoolean != null) {
                 if (aBoolean) {
@@ -163,6 +172,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     private void updateSwipeRefreshLayoutForUI() {
+        //if the checking1 equals true it doesn't refresh if its false refreshes and sets the checking1 true
         viewModel.getSwipeRefreshLayoutLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean != null) {
                 if (checking1 && aBoolean) {
@@ -177,12 +187,15 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     private void updateToastForUI() {
+        // if the user tries scroll down the app without using internet
         viewModel.getToastLiveData().observe(getViewLifecycleOwner(), string -> {
             if (string != null) {
                 if (checking2) {
                     if (string.isEmpty()) {
-                        Toast.makeText(requireActivity(), getResources().getString(R.string.ToastForOfflineMode), Toast.LENGTH_SHORT).show();
+                        //sends the message of offlineMode
+                        Toast.makeText(requireActivity(), OFFLINE_MODE, Toast.LENGTH_SHORT).show();
                     } else {
+                        //doesn't do the request for more pokemon
                         offset -= 20;
                         loading = true;
                         fragmentPokemonListBinding.swipeRefreshLayout.setRefreshing(false);
@@ -197,6 +210,9 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
     }
 
     private void navigateToDetail(String name, String image) {
+        /*Navigate one fragment to other using the Navigation Resource
+         and it passes the name and the image using navigation Args
+         */
         NavigateToPokemonDetailsFragment action = PokemonListFragmentDirections.navigateToPokemonDetailsFragment(name, image);
         Navigation.findNavController(requireView()).navigate(action);
     }
@@ -204,6 +220,7 @@ public class PokemonListFragment extends Fragment implements PokemonListAdapter.
 
     @Override
     public void onClick(String namePoke, String imagePoke) {
+        //if the users clicks on the pokemon it navigates and passes the data of the same
         navigateToDetail(namePoke, imagePoke);
     }
 

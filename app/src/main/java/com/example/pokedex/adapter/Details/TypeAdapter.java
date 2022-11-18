@@ -71,11 +71,15 @@ public class TypeAdapter extends ListAdapter<TypesResponse, TypeAdapter.Recycler
 
     public static class TypeDiff extends DiffUtil.ItemCallback<TypesResponse> {
 
+        //Observable for recycler view items
+
+        //replaces the oldItem with the newItem
         @Override
         public boolean areItemsTheSame(@NonNull TypesResponse oldItem, @NonNull TypesResponse newItem) {
             return oldItem.getNameType().equals(newItem.getNameType());
         }
 
+        //if the old version of the item equals the new doesnt do anything
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull TypesResponse oldItem, @NonNull TypesResponse newItem) {

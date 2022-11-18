@@ -41,12 +41,12 @@ public class ListRepository {
     private final static MutableLiveData<Boolean> progressBarLiveData = new MutableLiveData<>();
     private final static MutableLiveData<Boolean> swipeRefreshLayoutLiveData = new MutableLiveData<>();
     private final static MutableLiveData<String> toastLiveData = new MutableLiveData<>();
-    private final LoadingDialog loadingDialog = new LoadingDialog();
 
     public ListRepository() {
         getInjection();
     }
 
+    //void to make the retrofit request run in IO Thread and not in the main thread
     public void fetchPokemonList(int offset) {
         progressBarLiveData.setValue(true);
 
@@ -61,6 +61,8 @@ public class ListRepository {
         compositeDisposable.add(disposableFetchData);
     }
 
+
+    //Observer for the Disposable
     private DisposableObserver<PokemonCallback> getPokemonListAPIObserver(int offset) {
         return new DisposableObserver<PokemonCallback>() {
 
@@ -82,11 +84,15 @@ public class ListRepository {
 
     }
 
+    //void to get all of the pokemon names, that are on the list,in this case 20
     private void onResponseSuccess(PokemonCallback pokemonCallback, int offset) {
+
+        //to avoid duplicates
         pokemonList.clear();
 
         List<PokemonResponse> resultsList = pokemonCallback.getResults();
 
+        //one per time get the name and the url of the pokemon
         for (int i = 0; i < resultsList.size(); i++) {
             PokemonResponse result = resultsList.get(i);
 
@@ -96,8 +102,10 @@ public class ListRepository {
 
             String urlPoke = result.getUrl().replaceFirst(".$", "").substring(33);
 
+            //add the name, the url and the number which is the id of the pokemon to the database
             pokemonList.add(new PokemonResponse(offset, id, namePoke, urlPoke));
         }
+
 
         progressBarLiveData.setValue(false);
         pokemonListLiveData.setValue(pokemonList);
@@ -105,6 +113,7 @@ public class ListRepository {
         onInsertPokemonListIntoDatabase(pokemonList);
     }
 
+    //if the disposable has an error
     private void onResponseFail(Throwable e, int offset) {
         progressBarLiveData.setValue(false);
 
@@ -117,6 +126,7 @@ public class ListRepository {
         }
     }
 
+    //after the getter insert all of the data using IO Thread again (RXJava3)
     private void onInsertPokemonListIntoDatabase(List<PokemonResponse> pokemonList) {
         Observable<List<PokemonResponse>> observable = Observable.just(pokemonList);
 
@@ -150,15 +160,8 @@ public class ListRepository {
         return toastLiveData;
     }
 
-    public void resetValuesLiveData() {
-        pokemonListLiveData.postValue(null);
-        progressBarLiveData.postValue(null);
-        swipeRefreshLayoutLiveData.postValue(null);
-        toastLiveData.postValue(null);
-    }
 
     public void getDisposableToUnsubscribe() {
         compositeDisposable.dispose();
     }
-
 }

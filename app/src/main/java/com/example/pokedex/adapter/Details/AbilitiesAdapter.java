@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokedex.databinding.AbilityItemBinding;
 import com.example.pokedex.model.PokemonInfo.AbilityResponse;
+import com.example.pokedex.model.PokemonInfo.TypesResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,13 @@ public class AbilitiesAdapter extends ListAdapter<AbilityResponse, AbilitiesAdap
 
     @Override
     public void onBindViewHolder(@NonNull AbilityViewHolder holder, int position) {
+        //get the array position
         AbilityResponse item = abilityList.get(position);
 
+        //get the name of the ability
         String abilityName = item.getNameAbility();
 
+        //set the name of the ability corresponding tho the array position in this case corresponding to the pokemon ID
         holder.binding.abilityPoke.setText(abilityName);
     }
 
@@ -56,11 +60,15 @@ public class AbilitiesAdapter extends ListAdapter<AbilityResponse, AbilitiesAdap
 
     public static class AbilityDiff extends DiffUtil.ItemCallback<AbilityResponse>{
 
+        //Observable for recycler view items
+
+        //replaces the oldItem with the newItem
         @Override
         public boolean areItemsTheSame(@NonNull AbilityResponse oldItem, @NonNull AbilityResponse newItem) {
             return oldItem.getNameAbility().equals(newItem.getNameAbility());
         }
 
+        //if the old version of the item equals the new doesnt do anything
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull AbilityResponse oldItem, @NonNull AbilityResponse newItem) {
@@ -68,6 +76,7 @@ public class AbilitiesAdapter extends ListAdapter<AbilityResponse, AbilitiesAdap
         }
     }
 
+    //constructor to initialize the ViewBinding
     public static class AbilityViewHolder extends RecyclerView.ViewHolder {
 
         private final AbilityItemBinding binding;

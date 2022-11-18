@@ -13,6 +13,7 @@ public class APIClient {
         this.apiService = apiService;
     }
 
+
     public Observable<PokemonCallback> observableFetchPokemonList(int offset) {
         return apiService.getPokemonList(offset);
     }

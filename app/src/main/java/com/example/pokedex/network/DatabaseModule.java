@@ -1,5 +1,7 @@
 package com.example.pokedex.network;
 
+import static com.example.pokedex.util.Constants.POKEMON_DATABASE;
+
 import android.app.Application;
 
 import androidx.room.Room;
@@ -19,6 +21,8 @@ import dagger.hilt.migration.DisableInstallInCheck;
 @Module
 public class DatabaseModule {
 
+    //Creation of the Database PokemonDatabase on ROOM
+
     private final Application application;
 
     public DatabaseModule(Application application) {
@@ -34,7 +38,7 @@ public class DatabaseModule {
     @Provides
     @Singleton
     AppDatabase provideAppDatabase(Application application) {
-        return Room.databaseBuilder(application, AppDatabase.class, "PokemonDatabase")
+        return Room.databaseBuilder(application, AppDatabase.class, POKEMON_DATABASE)
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();

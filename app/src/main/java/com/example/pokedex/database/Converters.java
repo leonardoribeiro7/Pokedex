@@ -13,6 +13,8 @@ import java.util.List;
 
 public class Converters {
 
+    //Convert the Lists to json
+
     @TypeConverter
     public static String TypesListToJson(List<TypesResponse> types) {
         return new Gson().toJson(types);

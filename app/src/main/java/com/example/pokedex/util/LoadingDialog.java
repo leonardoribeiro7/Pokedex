@@ -16,8 +16,11 @@ import com.example.pokedex.R;
 
 public class LoadingDialog {
 
+    //Loading POP UP
+
     Dialog dialog;
 
+    //Requires a context and a boolean to determine if the user can cancel or not the loading
     public void displayLoading(Context context, Boolean cancel) {
         dialog = new Dialog(context);
 
@@ -31,7 +34,7 @@ public class LoadingDialog {
         }
     }
 
-
+    //Function to hide the loading pop UP
     public void hideLoading() {
         try {
             if (dialog != null) {

@@ -10,8 +10,6 @@
     <!--Message for Text Error -->
     <string name="tap_to_retry">There was an error\ntap to retry</string>
 
-    <!--When PokemonDetailsFragment is open without any network connection -->
-    <string name="ToastForOfflineMode">You are viewing in Offline Mode</string>
     <string name="abilities">☆ABILITIES☆</string>
     <string name="ability_item_test">Compound Eyes</string>
 

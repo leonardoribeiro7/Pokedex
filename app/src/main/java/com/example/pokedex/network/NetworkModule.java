@@ -21,6 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @InstallIn(SingletonComponent.class)
 public class NetworkModule {
 
+    //Connections to the Retrofit
+
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient() {

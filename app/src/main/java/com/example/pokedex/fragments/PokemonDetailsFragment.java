@@ -1,6 +1,10 @@
 package com.example.pokedex.fragments;
 
 
+import static com.example.pokedex.util.Constants.OFFLINE_MODE;
+import static com.example.pokedex.util.Constants.STATE_IMAGE;
+import static com.example.pokedex.util.Constants.STATE_NAME;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,11 +39,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class PokemonDetailsFragment extends Fragment {
 
+    //Declarations
     private TypeAdapter typeAdapter;
     private AbilitiesAdapter abilitiesAdapter;
     private FragmentPokemonDetailsBinding binding;
@@ -49,8 +53,6 @@ public class PokemonDetailsFragment extends Fragment {
     private String imagePoke;
     private final LoadingDialog loadingDialog = new LoadingDialog();
     private boolean checking0, checking1;
-    private final String STATE_NAME = "Current Name";
-    private final String STATE_IMAGE = "Current Image";
 
 
     public PokemonDetailsFragment() {
@@ -75,7 +77,7 @@ public class PokemonDetailsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentPokemonDetailsBinding.inflate(getLayoutInflater());
         detailViewModel = new ViewModelProvider(requireActivity()).get(DetailViewModel.class);
@@ -131,7 +133,7 @@ public class PokemonDetailsFragment extends Fragment {
             //Background work here
             handler.post(() -> {
                 //UI Thread work here
-                loadingDialog.displayLoading(requireContext(),false);
+                loadingDialog.displayLoading(requireContext(), false);
                 binding.namePoke.setText(namePoke);
                 Glide.with(this).load(imagePoke).placeholder(R.drawable.ic_loading).into(binding.imagePoke);
 
@@ -177,15 +179,12 @@ public class PokemonDetailsFragment extends Fragment {
         });
 
 
-
-
     }
 
     //Arrow to return to List Fragment
     private void setArrowButton() {
-        binding.arrow.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(PokemonDetailsFragmentDirections.navigateToPokemonListFragment());
-        });
+        //Navigation Resource Directions
+        binding.arrow.setOnClickListener(view -> Navigation.findNavController(view).navigate(PokemonDetailsFragmentDirections.navigateToPokemonListFragment()));
         detailRepository.resetValuesLiveData();
     }
 
@@ -195,6 +194,7 @@ public class PokemonDetailsFragment extends Fragment {
     }
 
     private void updateDataForUI() {
+        //update the data everything the view is created (doesn't create only updates)
         detailViewModel.getPokemonInfoLiveData().observe(getViewLifecycleOwner(), pokemonInfo -> {
             if (pokemonInfo != null && namePoke.equals(pokemonInfo.name)) {
                 typeAdapter.refreshTypeList(pokemonInfo.types);
@@ -203,6 +203,7 @@ public class PokemonDetailsFragment extends Fragment {
         });
     }
 
+    //updates progressbar after the request is done and it inserts more pokemon to the recyclerview
     private void updateProgressBarForUI() {
         detailViewModel.getProgressBarLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean != null) {
@@ -215,11 +216,12 @@ public class PokemonDetailsFragment extends Fragment {
         });
     }
 
+    //toast messages
     private void updateToastForUI() {
         detailViewModel.getToastLiveData().observe(getViewLifecycleOwner(), string -> {
             if (checking1 && string != null) {
                 if (string.isEmpty()) {
-                    Toast.makeText(requireActivity(), getResources().getString(R.string.ToastForOfflineMode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), OFFLINE_MODE, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(requireActivity(), string, Toast.LENGTH_SHORT).show();
                 }
